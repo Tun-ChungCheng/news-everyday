@@ -9,9 +9,9 @@ const bot = linebot({
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
 });
 
-bot.on("message", function (event) {
+bot.on("message", (event) => {
   event
-    .reply(event.message.text)
+    .reply("大大大優惠")
     .then((data) => {
       console.log(data);
     })
@@ -22,12 +22,6 @@ bot.on("message", function (event) {
 
 const linebotParser = bot.parser();
 app.post("/linewebhook", linebotParser);
-
-app.get("/", (req, res) => {
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  res.end("Hello, World!\n");
-});
 
 /* Connect To port 8080 */
 const port = process.env.PORT || 8080;
