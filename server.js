@@ -11,7 +11,7 @@ const bot = linebot({
 
 bot.on("message", (event) => {
   event
-    .reply("大大大優惠")
+    .reply(event.message.text)
     .then((data) => {
       console.log(data);
     })
@@ -22,6 +22,12 @@ bot.on("message", (event) => {
 
 const linebotParser = bot.parser();
 app.post("/linewebhook", linebotParser);
+
+app.get("/", (req, res) => {
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "text/plain");
+  res.end("Hello, World!\n");
+});
 
 /* Connect To port 8080 */
 const port = process.env.PORT || 8080;
