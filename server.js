@@ -1,7 +1,11 @@
 const express = require("express");
 const app = express();
 const linebot = require("linebot");
+const mongoose = require("mongoose");
 require("dotenv").config;
+const NewsAPI = require("newsapi");
+const newsapi = new NewsAPI("2e0a97b0e60746ff84e8fa08ffdbef59");
+const schedule = require("node-schedule");
 
 const bot = linebot({
   channelId: process.env.CHANNEL_ID,
@@ -9,15 +13,24 @@ const bot = linebot({
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
 });
 
-bot.on("message", (event) => {
-  event
-    .reply(event.message.text)
-    .then((data) => {
-      console.log(data);
+const message = [];
+
+const job = schedule.scheduleJob("30 * * * *", function () {
+  newsapi.v2
+    .topHeadlines({
+      country: "tw",
     })
-    .catch((error) => {
-      console.log(error);
+    .then((response) => {
+      response.articles.map((article, index) => {
+        message.push({
+          index: ++index,
+          title: article.title,
+          url: article.url,
+        });
+      });
+      console.log(message);
     });
+  bot.reply("早上好台灣! 我是主播狗仔，以下為昨天的焦點新聞" + message);
 });
 
 const linebotParser = bot.parser();
