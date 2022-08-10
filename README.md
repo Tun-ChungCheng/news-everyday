@@ -1,1 +1,1 @@
-# huge-discount
+# news-everyday
